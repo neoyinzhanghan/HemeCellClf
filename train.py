@@ -23,6 +23,7 @@ num_epochs = 500  # 200
 data_dir = "/media/hdd2/neo/blasts_skippocytes_split"
 num_gpus = 3
 num_workers = 20
+downsample_factor = 1
 
 ############################################################################
 ####### FUNCTIONS FOR DATA AUGMENTATION AND DATA LOADING ###################
@@ -248,5 +249,4 @@ def train_model(downsample_factor):
 
 if __name__ == "__main__":
     # Run training for each downsampling factor
-    for factor in [1]:
-        train_model(factor)
+    train_model(downsample_factor=downsample_factor)
