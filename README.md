@@ -42,6 +42,8 @@ data_dir
             ...
 ```
 
+`num_gpus` is the number of GPUs you would like to use to train the model. `num_workers` is the number of CPUs you would like to use for data loading. The train scripts allows you to train your model on lower resolutions by specifying a `downsample_facotr` that is greater than 1. 
+
 To train with no hang up.
 ```
 nohup python scripts/train.py > train_progress.log 2> train_error.log &
