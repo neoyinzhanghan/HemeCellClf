@@ -24,6 +24,8 @@ data_dir = "/media/hdd2/neo/blasts_skippocytes_split"
 num_gpus = 3
 num_workers = 20
 downsample_factor = 1
+batch_size = 32
+num_classes = 2
 
 ############################################################################
 ####### FUNCTIONS FOR DATA AUGMENTATION AND DATA LOADING ###################
@@ -229,10 +231,10 @@ class ResNetModel(pl.LightningModule):
 def train_model(downsample_factor):
     data_module = ImageDataModule(
         data_dir=data_dir,
-        batch_size=32,
+        batch_size=batch_size,
         downsample_factor=downsample_factor,
     )
-    model = ResNetModel(num_classes=2)
+    model = ResNetModel(num_classes=num_classes)
 
     # Logger
     logger = TensorBoardLogger("lightning_logs", name=str(downsample_factor))
