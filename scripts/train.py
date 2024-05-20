@@ -20,7 +20,7 @@ from torchmetrics import Accuracy, AUROC
 
 default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
 num_epochs = 500  # 200
-data_dir = "/media/hdd2/neo/blasts_skippocytes_split"
+data_dir = "/media/hdd1/neo/bma_region_clf_data_full_v2_split"
 num_gpus = 3
 num_workers = 20
 downsample_factor = 1
