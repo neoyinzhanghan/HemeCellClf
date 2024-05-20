@@ -13,10 +13,13 @@ You will have to specify your data path, training resources and hyperparamters i
 
 default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
 num_epochs = 500  # 200
-data_dir = "/media/hdd2/neo/blasts_skippocytes_split"
+data_dir = "/media/hdd1/neo/bma_region_clf_data_full_v2_split"
 num_gpus = 3
 num_workers = 20
 downsample_factor = 1
+batch_size = 32
+num_classes = 2
+img_size = 96
 ```
 
 `lr` is the learning rate. `num_epochs` is the number of epochs. `data_dir` is that path to your data. We assume that `data_dir` has three subfolders `data_dir/train`, `data_dir/val`, `data_dir/test`. Each subdirectory has a number of further subfolders each for a class, and within those folders the cell images in that class.

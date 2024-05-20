@@ -26,6 +26,7 @@ num_workers = 20
 downsample_factor = 1
 batch_size = 32
 num_classes = 2
+img_size = 96
 
 ############################################################################
 ####### FUNCTIONS FOR DATA AUGMENTATION AND DATA LOADING ###################
@@ -80,7 +81,7 @@ class DownsampledDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         image, label = self.dataset[idx]
         if self.downsample_factor > 1:
-            size = (96 // self.downsample_factor, 96 // self.downsample_factor)
+            size = (img_size // self.downsample_factor, img_size // self.downsample_factor)
             image = transforms.functional.resize(image, size)
 
         # Convert image to RGB if not already
@@ -91,7 +92,7 @@ class DownsampledDataset(torch.utils.data.Dataset):
         if self.apply_augmentation:
             # Apply augmentation
             image = get_feat_extract_augmentation_pipeline(
-                image_size=96 // self.downsample_factor
+                image_size=img_size // self.downsample_factor
             )(image=np.array(image))["image"]
 
         image = to_tensor(image)
