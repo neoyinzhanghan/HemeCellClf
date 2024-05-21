@@ -21,7 +21,7 @@ from torch.utils.data import WeightedRandomSampler
 
 num_epochs = 50
 default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
-data_dir = "/media/hdd2/riya/mil-data/"
+data_dir = "/media/hdd3/neo/mil-data/"
 num_gpus = 3
 num_workers = 20
 downsample_factor = 1
