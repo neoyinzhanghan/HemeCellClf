@@ -19,15 +19,15 @@ from torch.utils.data import WeightedRandomSampler
 ####### DEFINE HYPERPARAMETERS AND DATA DIRECTORIES ########################
 ############################################################################
 
-num_epochs = 500
+num_epochs = 50
 default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
-data_dir = "/media/hdd1/neo/pooled_deepheme_data"
+data_dir = "/media/hdd2/riya/mil-data/"
 num_gpus = 3
 num_workers = 20
 downsample_factor = 1
 batch_size = 256
 img_size = 96
-num_classes = 23
+num_classes = 2
 
 ############################################################################
 ####### FUNCTIONS FOR DATA AUGMENTATION AND DATA LOADING ###################
@@ -184,10 +184,13 @@ class Myresnext50(pl.LightningModule):
             task = "binary"
         elif num_classes > 2:
             task = "multiclass"
-        self.train_accuracy = Accuracy(num_classes=num_classes, task=task)
-        self.val_accuracy = Accuracy(num_classes=num_classes, task=task)
+
+        self.train_accuracy = Accuracy(task=task, num_classes=num_classes)
+        self.val_accuracy = Accuracy(task=task, num_classes=num_classes)
         self.train_auroc = AUROC(num_classes=num_classes, task=task)
         self.val_auroc = AUROC(num_classes=num_classes, task=task)
+        self.test_accuracy = Accuracy(num_classes=num_classes, task=task)
+        self.test_auroc = AUROC(num_classes=num_classes, task=task)
 
         self.config = config
 
@@ -228,6 +231,22 @@ class Myresnext50(pl.LightningModule):
         current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
         self.log("learning_rate", current_lr, on_epoch=True)
 
+    def test_step(self, batch, batch_idx):
+        x, y = batch
+        y_hat = self.forward(x)
+        loss = F.cross_entropy(y_hat, y)
+        self.log("test_loss", loss, on_step=False, on_epoch=True)
+        self.test_accuracy(y_hat, y)
+        self.test_auroc(y_hat, y)
+        return loss
+
+    def on_test_epoch_end(self):
+        self.log("test_acc_epoch", self.test_accuracy.compute())
+        self.log("test_auroc_epoch", self.test_auroc.compute())
+        # Handle or reset saved outputs as needed
+        current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
+        self.log("learning_rate", current_lr, on_epoch=True)
+
 
 # Main training loop
 def train_model(downsample_factor, my_pretrained_model):
@@ -251,6 +270,7 @@ def train_model(downsample_factor, my_pretrained_model):
         accelerator="gpu",  # 'ddp' for DistributedDataParallel
     )
     trainer.fit(model, data_module)
+    trainer.test(model, data_module.test_dataloader())
 
 
 if __name__ == "__main__":
