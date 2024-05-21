@@ -180,10 +180,7 @@ class Myresnext50(pl.LightningModule):
         )
         self.num_classes = num_classes
 
-        if num_classes == 2:
-            task = "binary"
-        elif num_classes > 2:
-            task = "multiclass"
+        task = "multiclass"
 
         self.train_accuracy = Accuracy(task=task, num_classes=num_classes)
         self.val_accuracy = Accuracy(task=task, num_classes=num_classes)
