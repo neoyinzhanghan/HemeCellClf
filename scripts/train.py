@@ -137,20 +137,40 @@ class ImageDataModule(pl.LightningDataModule):
         )
 
         # Compute class weights for handling imbalance
-        class_counts = torch.tensor([t[1] for t in train_dataset.samples]).bincount()
-        class_weights = 1.0 / class_counts.float()
-        sample_weights = class_weights[[t[1] for t in train_dataset.samples]]
+        class_counts_train = torch.tensor(
+            [t[1] for t in train_dataset.samples]
+        ).bincount()
+        class_weights_train = 1.0 / class_counts_train.float()
+        sample_weights_train = class_weights_train[
+            [t[1] for t in train_dataset.samples]
+        ]
+
+        class_counts_val = torch.tensor([t[1] for t in val_dataset.samples]).bincount()
+        class_weights_val = 1.0 / class_counts_val.float()
+        sample_weights_val = class_weights_val[[t[1] for t in val_dataset.samples]]
+
+        class_counts_test = torch.tensor(
+            [t[1] for t in test_dataset.samples]
+        ).bincount()
+        class_weights_test = 1.0 / class_counts_test.float()
+        sample_weights_test = class_weights_test[[t[1] for t in test_dataset.samples]]
 
         self.train_sampler = WeightedRandomSampler(
-            weights=sample_weights, num_samples=len(sample_weights), replacement=True
+            weights=sample_weights_train,
+            num_samples=len(sample_weights_train),
+            replacement=True,
         )
 
         self.val_sampler = WeightedRandomSampler(
-            weights=sample_weights, num_samples=len(sample_weights), replacement=True
+            weights=sample_weights_val,
+            num_samples=len(sample_weights_val),
+            replacement=True,
         )
 
         self.test_sampler = WeightedRandomSampler(
-            weights=sample_weights, num_samples=len(sample_weights), replacement=True
+            weights=sample_weights_test,
+            num_samples=len(sample_weights_test),
+            replacement=True,
         )
 
     def train_dataloader(self):
