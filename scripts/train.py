@@ -145,6 +145,14 @@ class ImageDataModule(pl.LightningDataModule):
             weights=sample_weights, num_samples=len(sample_weights), replacement=True
         )
 
+        self.val_sampler = WeightedRandomSampler(
+            weights=sample_weights, num_samples=len(sample_weights), replacement=True
+        )
+
+        self.test_sampler = WeightedRandomSampler(
+            weights=sample_weights, num_samples=len(sample_weights), replacement=True
+        )
+
     def train_dataloader(self):
         return DataLoader(
             self.train_dataset,
@@ -155,12 +163,18 @@ class ImageDataModule(pl.LightningDataModule):
 
     def val_dataloader(self):
         return DataLoader(
-            self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=20
+            self.val_dataset,
+            batch_size=self.batch_size,
+            sampler=self.val_sampler,
+            num_workers=20,
         )
 
     def test_dataloader(self):
         return DataLoader(
-            self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=20
+            self.test_dataset,
+            batch_size=self.batch_size,
+            sampler=self.test_sampler,
+            num_workers=20,
         )
 
 
