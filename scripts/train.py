@@ -19,15 +19,15 @@ from torch.utils.data import WeightedRandomSampler
 ####### DEFINE HYPERPARAMETERS AND DATA DIRECTORIES ########################
 ############################################################################
 
-num_epochs = 50
-default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
-data_dir = "/media/hdd3/neo/mil-data/"
+num_epochs = 500
+default_config = {"lr": 3.56e-06}  # 1.462801279401232e-06}
+data_dir = "/media/hdd1/neo/pooled_deepheme_data"
 num_gpus = 3
 num_workers = 20
 downsample_factor = 1
 batch_size = 256
 img_size = 96
-num_classes = 2
+num_classes = 23
 
 ############################################################################
 ####### FUNCTIONS FOR DATA AUGMENTATION AND DATA LOADING ###################
