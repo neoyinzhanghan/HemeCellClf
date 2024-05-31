@@ -203,14 +203,15 @@ class Myresnext50(pl.LightningModule):
     def __init__(self, my_pretrained_model, num_classes=23, config=default_config):
         super(Myresnext50, self).__init__()
         self.pretrained = my_pretrained_model
-        self.my_new_layers = nn.Sequential(
-            nn.Linear(
-                1000, 100
-            ),  # Assuming the output of your pre-trained model is 1000
-            nn.ReLU(),
-            nn.Linear(100, num_classes),
-        )
-        self.num_classes = num_classes
+        self.pretrained.fc = nn.Linear(self.pretrained.fc.in_features, num_classes)
+        # self.my_new_layers = nn.Sequential(
+        #     nn.Linear(
+        #         1000, 100
+        #     ),  # Assuming the output of your pre-trained model is 1000
+        #     nn.ReLU(),
+        #     nn.Linear(100, num_classes),
+        # )
+        # self.num_classes = num_classes
 
         task = "multiclass"
 
@@ -225,7 +226,6 @@ class Myresnext50(pl.LightningModule):
 
     def forward(self, x):
         x = self.pretrained(x)
-        x = self.my_new_layers(x)
 
         return x
 
